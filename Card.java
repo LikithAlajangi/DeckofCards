@@ -1,5 +1,7 @@
 package Cards;
 
+import java.util.*;
+
 public class Card {
    private String face;
    private int rank;
@@ -12,7 +14,7 @@ public String toString() {
 	return "%s%c(%d)".formatted(faceStr,suit.getImage(),rank);
 }
    
-public Card getNumericCard(Suit suit,int cardno) {
+public static Card getNumericCard(Suit suit,int cardno) {
 	if(cardno >1 && cardno<11) {
 		return new Card(String.valueOf(cardno),cardno-2,suit);
 	}
@@ -20,7 +22,7 @@ public Card getNumericCard(Suit suit,int cardno) {
 	return null;
 }
 
-public Card getFaceCard(Suit suit,char abbrev) {
+public static Card getFaceCard(Suit suit,char abbrev) {
 	int idx = "JKQA".indexOf(Character.toUpperCase(abbrev));
 	
 	if(idx>-1) {
@@ -35,5 +37,47 @@ public Card(String face, int rank, Suit suit) {
 	this.rank = rank;
 	this.suit = suit;
 }
+
+public static List<Card> getDeck(){
+	
+	List<Card> deck = new ArrayList<>(52);
+	for(Suit suit : Suit.values()) {
+		
+		for(int i=2;i<=10;i++) {
+			deck.add(getNumericCard(suit,i));
+		}
+		
+		
+		char[] faces = {'J','K','Q','A'};
+	      for (char c:faces) {
+	    	  deck.add(getFaceCard(suit,c));
+	      }
+	}
+	return deck;
+	
+}
+
+public static void printDeck(List<Card> deck,String description,int rows) {
+	System.out.println("-----------------------------------------------------------------------------------");
+	if(description!=null) {
+		System.out.println(description);
+	}
+	
+	int cardsinRow = deck.size()/rows;
+	
+	for(int i=0;i<rows;i++) {
+		int sIdx = i*cardsinRow;
+		int eIdx = sIdx + cardsinRow;
+		deck.subList(sIdx, eIdx).forEach(c -> System.out.print(c + " "));
+		System.out.println();
+	}
+}
+
+
+public static void printDeck(List<Card> deck) {
+	printDeck(deck,"",4);
+}
+
+
 
 }
